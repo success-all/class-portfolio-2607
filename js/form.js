@@ -46,7 +46,10 @@
     currentStep = clampStep(nextStep);
     stepEnterTs = Date.now();
     showStep(currentStep);
-    if (window.Tracker) window.Tracker.logFormStep(currentStep, 'enter', 0);
+    if (window.Tracker) {
+      window.Tracker.logFormStep(currentStep, 'enter', 0);
+      window.Tracker.flushNow();
+    }
   }
 
   function flushAbandonIfNeeded() {
@@ -62,6 +65,7 @@
     if (window.Tracker) {
       window.Tracker.init();
       window.Tracker.logFormStep(1, 'enter', 0);
+      window.Tracker.flushNow();
     }
 
     document.getElementById('btn-next-1').addEventListener('click', function () {
@@ -95,7 +99,6 @@
       if (window.Tracker) window.Tracker.setLeadData(formData);
       goToStep(3, 'complete');
       completed = true;
-      if (window.Tracker) window.Tracker.flushNow();
     });
 
     showStep(1);

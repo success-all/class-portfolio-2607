@@ -1,5 +1,6 @@
 (function () {
   var pageEnterTs = Date.now();
+  var lastFlushTs = pageEnterTs;
   var sessionId = getOrCreateSessionId();
   var filterClicks = [];
   var clickSequence = [];
@@ -127,7 +128,7 @@
       projectClickSequence: JSON.stringify(clickSequence),
       sectionDwellMs: JSON.stringify(dwellMap),
       mouseHeatmapGrid: JSON.stringify(mouseGrid),
-      pageDurationMs: Date.now() - pageEnterTs,
+      pageDurationMs: Date.now() - lastFlushTs,
       formStepStatus: JSON.stringify(formStepStatus),
       formCompleted: formCompleted,
       consentGiven: consentGiven,
@@ -137,6 +138,16 @@
       leadDescription: consentGiven ? leadData.description : '',
       clickCoordinates: JSON.stringify(clickCoordinates)
     };
+  }
+
+  function resetDeltaState() {
+    filterClicks = [];
+    clickSequence = [];
+    clickCoordinates = [];
+    dwellMap = {};
+    mouseGrid = {};
+    formStepStatus = {};
+    lastFlushTs = Date.now();
   }
 
   function flushNow() {
@@ -156,6 +167,7 @@
     } catch (err) {
       // Swallow logging failures; never break the page for the visitor.
     }
+    resetDeltaState();
   }
 
   function init() {

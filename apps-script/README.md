@@ -31,6 +31,8 @@
 
 ## 시트 컬럼 (순서대로)
 
+> **한 행 = 한 이벤트.** 필터/카드 클릭, 폼 단계 전환마다 그 즉시 한 행씩 전송되며, 각 행은 **직전 전송 이후 새로 발생한 것만** 담는다 (이전 행 내용을 다시 포함하지 않음). 따라서 여러 행을 그대로 합산해도 과대집계되지 않는다 — 세션 전체를 보려면 같은 `sessionId`의 행들을 순서대로 이어서 봐야 한다.
+
 | # | 컬럼명 | 설명 |
 |---|---|---|
 | 1 | timestamp | 전송 시각 (ISO 문자열) |
@@ -44,19 +46,21 @@
 | 9 | viewportSize | 뷰포트 크기 (예: `1280x720`) |
 | 10 | language | `navigator.language` |
 | 11 | timezone | 타임존 (예: `Asia/Seoul`) |
-| 12 | galleryFilterClicks | 클릭한 갤러리 필터 순서 (JSON 배열) |
-| 13 | projectClickSequence | 프로젝트 클릭 순서+간격 (JSON 배열, `{projectId, deltaMs}`) |
-| 14 | sectionDwellMs | 섹션별 체류시간 ms (JSON 객체) |
-| 15 | mouseHeatmapGrid | 마우스 20x20 그리드 카운트 (JSON 객체) |
-| 16 | pageDurationMs | 총 페이지 체류시간(ms) |
-| 17 | formStepStatus | 폼 단계별 상태/소요시간 (JSON 객체, contact 페이지만) |
-| 18 | formCompleted | 폼 완료 여부 (`true`/`false`) |
-| 19 | consentGiven | 개인정보 수집 동의 여부 (`true`/`false`) |
-| 20 | leadName | 이름 (동의 시에만 값 존재) |
-| 21 | leadEmail | 이메일 (동의 시에만 값 존재) |
-| 22 | leadProjectType | 문의 유형 (동의 시에만 값 존재) |
-| 23 | leadDescription | 문의 내용 (동의 시에만 값 존재) |
-| 24 | clickCoordinates | 프로젝트 카드 클릭 시점의 정확한 좌표 (JSON 배열, `{x, y}`, 페이지 기준 픽셀) |
+| 12 | galleryFilterClicks | 이번 전송 시점에 새로 클릭된 갤러리 필터 (JSON 배열, 보통 0~1개) |
+| 13 | projectClickSequence | 이번 전송 시점에 새로 클릭된 프로젝트 (JSON 배열, `{projectId, deltaMs}`, 보통 0~1개) |
+| 14 | sectionDwellMs | 직전 전송 이후 섹션별 체류시간 ms (JSON 객체) |
+| 15 | mouseHeatmapGrid | 직전 전송 이후 마우스 20x20 그리드 카운트 (JSON 객체) |
+| 16 | pageDurationMs | 직전 전송 이후 경과 시간(ms) |
+| 17 | formStepStatus | 이번 전송 시점에 새로 발생한 폼 단계 상태 변화 (JSON 객체, contact 페이지만) |
+| 18 | formCompleted | 폼 완료 여부 (`true`/`false`, 완료 후에는 계속 `true`) |
+| 19 | consentGiven | 개인정보 수집 동의 여부 (`true`/`false`, 동의 후에는 계속 `true`) |
+| 20 | leadName | 이름 (동의 시에만 값 존재, 동의 후 모든 행에 계속 포함) |
+| 21 | leadEmail | 이메일 (동의 시에만 값 존재, 동의 후 모든 행에 계속 포함) |
+| 22 | leadProjectType | 문의 유형 (동의 시에만 값 존재, 동의 후 모든 행에 계속 포함) |
+| 23 | leadDescription | 문의 내용 (동의 시에만 값 존재, 동의 후 모든 행에 계속 포함) |
+| 24 | clickCoordinates | 이번 전송 시점에 새로 클릭된 프로젝트 카드의 정확한 좌표 (JSON 배열, `{x, y}`, 페이지 기준 픽셀, 보통 0~1개) |
+
+`18~23`번(폼 완료 여부, 동의 여부, 리드 정보)은 예외적으로 델타가 아니라 **한 번 정해지면 계속 유지되는 상태값**이라 매 행에 반복해서 포함된다 — 개수를 세는 값이 아니라서 합산 과대집계 문제가 없다.
 
 > `Visitors` 시트를 이미 만든 적이 있다면, 헤더 행(1행) 맨 끝에 `clickCoordinates` 칸을 직접 하나 추가해야 한다. 코드는 시트가 **처음 만들어질 때만** 헤더를 자동으로 채우기 때문에, 기존 시트의 헤더는 자동으로 갱신되지 않는다.
 
