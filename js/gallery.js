@@ -34,7 +34,10 @@
         buttons.forEach(function (b) { b.classList.remove('active'); });
         button.classList.add('active');
         var category = button.getAttribute('data-filter');
-        if (window.Tracker) window.Tracker.logFilterClick(category);
+        if (window.Tracker) {
+          window.Tracker.logFilterClick(category);
+          window.Tracker.flushNow();
+        }
         renderProjects(filterProjects(window.PROJECTS, category));
       });
     });
