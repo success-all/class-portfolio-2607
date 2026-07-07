@@ -35,3 +35,7 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", sans-serif; color: #1f
 .form-actions button { padding: 0.6rem 1.2rem; border-radius: 0.4rem; border: none; cursor: pointer; }
 .form-actions .primary { background: #2563eb; color: white; }
 .form-actions .secondary { background: #e5e7eb; }
+
+.consent-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-size: 0.85rem; color: #4b5563; }
+.consent-row input[type="checkbox"] { width: auto; }
+.consent-row label { display: inline; font-weight: 400; margin: 0; }

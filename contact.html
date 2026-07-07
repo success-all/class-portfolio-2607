@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header class="hero">
+  <header class="hero" data-section="contact-hero">
     <h1>프로젝트 문의하기</h1>
     <nav>
       <a href="index.html">소개</a>
@@ -15,7 +15,7 @@
     </nav>
   </header>
 
-  <main class="form-container">
+  <main class="form-container" data-section="contact-form">
     <div class="progress">
       <div class="progress-step" data-step="1"></div>
       <div class="progress-step" data-step="2"></div>
@@ -28,6 +28,10 @@
       <input id="field-name" type="text" />
       <label for="field-email">이메일</label>
       <input id="field-email" type="email" />
+      <div class="consent-row">
+        <input type="checkbox" id="field-consent" />
+        <label for="field-consent">이름/이메일/문의내용 등 개인정보 수집·이용에 동의합니다.</label>
+      </div>
       <div class="form-actions">
         <button id="btn-next-1" class="primary">다음</button>
       </div>
@@ -56,6 +60,9 @@
     </section>
   </main>
 
+  <script>window.TRACKER_PAGE = 'contact';</script>
+  <script src="js/config.js"></script>
+  <script src="js/tracker.js"></script>
   <script src="js/form.js"></script>
 </body>
 </html>
