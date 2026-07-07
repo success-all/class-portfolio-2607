@@ -22,7 +22,7 @@
 
    ```bash
    curl -X POST "<웹앱 URL>" -H "Content-Type: text/plain" \
-     -d '{"token":"<INGEST_TOKEN 값>","timestamp":"2026-07-07T10:00:00.000Z","sessionId":"test","page":"home","referrer":"direct","userAgent":"curl","deviceType":"desktop","browser":"Other","screenResolution":"1920x1080","viewportSize":"1280x720","language":"ko-KR","timezone":"Asia/Seoul","galleryFilterClicks":"[]","projectClickSequence":"[]","sectionDwellMs":"{}","mouseHeatmapGrid":"{}","pageDurationMs":1000,"formStepStatus":"{}","formCompleted":false,"consentGiven":false,"leadName":"","leadEmail":"","leadProjectType":"","leadDescription":""}'
+     -d '{"token":"<INGEST_TOKEN 값>","timestamp":"2026-07-07T10:00:00.000Z","sessionId":"test","page":"home","referrer":"direct","userAgent":"curl","deviceType":"desktop","browser":"Other","screenResolution":"1920x1080","viewportSize":"1280x720","language":"ko-KR","timezone":"Asia/Seoul","galleryFilterClicks":"[]","projectClickSequence":"[]","sectionDwellMs":"{}","mouseHeatmapGrid":"{}","pageDurationMs":1000,"formStepStatus":"{}","formCompleted":false,"consentGiven":false,"leadName":"","leadEmail":"","leadProjectType":"","leadDescription":"","clickCoordinates":"[]"}'
    ```
 
    실행 후 스프레드시트의 `Visitors` 시트에 한 행이 추가되면 정상 동작하는 것이다. `token`이 틀리거나 없으면 `{"error":"unauthorized"}` 가 반환되고 시트에는 아무 것도 추가되지 않는다.
@@ -56,6 +56,9 @@
 | 21 | leadEmail | 이메일 (동의 시에만 값 존재) |
 | 22 | leadProjectType | 문의 유형 (동의 시에만 값 존재) |
 | 23 | leadDescription | 문의 내용 (동의 시에만 값 존재) |
+| 24 | clickCoordinates | 프로젝트 카드 클릭 시점의 정확한 좌표 (JSON 배열, `{x, y}`, 페이지 기준 픽셀) |
+
+> `Visitors` 시트를 이미 만든 적이 있다면, 헤더 행(1행) 맨 끝에 `clickCoordinates` 칸을 직접 하나 추가해야 한다. 코드는 시트가 **처음 만들어질 때만** 헤더를 자동으로 채우기 때문에, 기존 시트의 헤더는 자동으로 갱신되지 않는다.
 
 ## 보안 참고
 

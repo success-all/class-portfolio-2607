@@ -17,9 +17,9 @@
         '<div class="project-thumb project-thumb--' + project.category + '"></div>' +
         '<h3>' + project.title + '</h3>' +
         '<p>' + project.description + '</p>';
-      card.addEventListener('click', function () {
+      card.addEventListener('click', function (e) {
         if (window.Tracker) {
-          window.Tracker.logProjectClick(project.id);
+          window.Tracker.logProjectClick(project.id, e.pageX, e.pageY);
           window.Tracker.flushNow();
         }
       });

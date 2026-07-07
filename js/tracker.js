@@ -3,6 +3,7 @@
   var sessionId = getOrCreateSessionId();
   var filterClicks = [];
   var clickSequence = [];
+  var clickCoordinates = [];
   var lastClickTs = null;
   var dwellMap = {};
   var mouseGrid = {};
@@ -86,11 +87,12 @@
     filterClicks.push(category);
   }
 
-  function logProjectClick(projectId) {
+  function logProjectClick(projectId, x, y) {
     var now = Date.now();
     var deltaMs = lastClickTs === null ? null : now - lastClickTs;
     lastClickTs = now;
     clickSequence.push({ projectId: projectId, deltaMs: deltaMs });
+    clickCoordinates.push({ x: x, y: y });
   }
 
   function logFormStep(step, action, durationMs) {
@@ -132,7 +134,8 @@
       leadName: consentGiven ? leadData.name : '',
       leadEmail: consentGiven ? leadData.email : '',
       leadProjectType: consentGiven ? leadData.projectType : '',
-      leadDescription: consentGiven ? leadData.description : ''
+      leadDescription: consentGiven ? leadData.description : '',
+      clickCoordinates: JSON.stringify(clickCoordinates)
     };
   }
 

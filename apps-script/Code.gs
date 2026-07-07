@@ -4,7 +4,8 @@ var COLUMNS = [
   'userAgent', 'deviceType', 'browser', 'screenResolution', 'viewportSize', 'language', 'timezone',
   'galleryFilterClicks', 'projectClickSequence', 'sectionDwellMs', 'mouseHeatmapGrid', 'pageDurationMs',
   'formStepStatus', 'formCompleted',
-  'consentGiven', 'leadName', 'leadEmail', 'leadProjectType', 'leadDescription'
+  'consentGiven', 'leadName', 'leadEmail', 'leadProjectType', 'leadDescription',
+  'clickCoordinates'
 ];
 
 function doPost(e) {
