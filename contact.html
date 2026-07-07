@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>문의하기</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>프로젝트 문의하기</h1>
+    <nav>
+      <a href="index.html">소개</a>
+      <a href="contact.html">문의하기</a>
+    </nav>
+  </header>
+
+  <main class="form-container">
+    <div class="progress">
+      <div class="progress-step" data-step="1"></div>
+      <div class="progress-step" data-step="2"></div>
+      <div class="progress-step" data-step="3"></div>
+    </div>
+
+    <section class="form-step" data-step="1">
+      <h2>1단계: 기본정보</h2>
+      <label for="field-name">이름</label>
+      <input id="field-name" type="text" />
+      <label for="field-email">이메일</label>
+      <input id="field-email" type="email" />
+      <div class="form-actions">
+        <button id="btn-next-1" class="primary">다음</button>
+      </div>
+    </section>
+
+    <section class="form-step" data-step="2">
+      <h2>2단계: 프로젝트 문의</h2>
+      <label for="field-project-type">문의 유형</label>
+      <select id="field-project-type">
+        <option value="web">웹</option>
+        <option value="mobile">모바일</option>
+        <option value="ai">AI</option>
+        <option value="design">디자인</option>
+      </select>
+      <label for="field-description">프로젝트 설명</label>
+      <textarea id="field-description" rows="4"></textarea>
+      <div class="form-actions">
+        <button id="btn-prev-2" class="secondary">이전</button>
+        <button id="btn-next-2" class="primary">제출</button>
+      </div>
+    </section>
+
+    <section class="form-step" data-step="3">
+      <h2>완료되었습니다</h2>
+      <p>문의해주셔서 감사합니다. 빠르게 연락드리겠습니다.</p>
+    </section>
+  </main>
+
+  <script src="js/form.js"></script>
+</body>
+</html>
