@@ -10,6 +10,11 @@ var COLUMNS = [
 function doPost(e) {
   try {
     var row = JSON.parse(e.postData.contents);
+    var expectedToken = PropertiesService.getScriptProperties().getProperty('INGEST_TOKEN');
+    if (!expectedToken || row.token !== expectedToken) {
+      return ContentService.createTextOutput(JSON.stringify({ error: 'unauthorized' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     var sheet = getVisitorsSheet_();
     sheet.appendRow(COLUMNS.map(function (key) {
       return row[key] !== undefined ? row[key] : '';

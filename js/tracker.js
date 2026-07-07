@@ -109,6 +109,7 @@
   function buildRow() {
     var ua = navigator.userAgent;
     return {
+      token: (window.TRACKER_CONFIG && window.TRACKER_CONFIG.INGEST_TOKEN) || '',
       timestamp: new Date().toISOString(),
       sessionId: sessionId,
       page: window.TRACKER_PAGE || 'unknown',

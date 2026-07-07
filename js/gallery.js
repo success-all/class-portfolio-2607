@@ -18,7 +18,10 @@
         '<h3>' + project.title + '</h3>' +
         '<p>' + project.description + '</p>';
       card.addEventListener('click', function () {
-        if (window.Tracker) window.Tracker.logProjectClick(project.id);
+        if (window.Tracker) {
+          window.Tracker.logProjectClick(project.id);
+          window.Tracker.flushNow();
+        }
       });
       grid.appendChild(card);
     });

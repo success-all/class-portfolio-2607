@@ -12,19 +12,22 @@
 2. 확장 프로그램 → Apps Script 를 연다.
 3. 기본 생성된 `Code.gs` 파일 내용을 이 저장소의 `apps-script/Code.gs` 내용으로 교체한다.
    (시트 이름/컬럼은 코드 안에서 자동으로 `Visitors` 시트를 생성하고 헤더를 채우므로 시트를 미리 만들 필요는 없다.)
-4. 배포 → 새 배포 → 유형: 웹 앱
+4. 프로젝트 설정(톱니바퀴) → 스크립트 속성 에서 `INGEST_TOKEN` 속성을 추가하고 임의의 긴 문자열(예: `openssl rand -hex 16` 결과)을 값으로 넣는다. (누구나 이 URL로 시트에 쓰레기 데이터를 넣지 못하도록 막는 최소한의 장치 — 강력한 보안은 아니다.)
+5. 배포 → 새 배포 → 유형: 웹 앱
    - 실행 사용자: 나
    - 액세스 권한: 모든 사용자
-5. 배포 후 발급되는 웹 앱 URL을 복사한다.
-6. 이 저장소의 `js/config.js` 의 `APPS_SCRIPT_URL` 값을 위 URL로 교체한다.
-7. 동작 확인:
+6. 배포 후 발급되는 웹 앱 URL을 복사한다.
+7. 이 저장소의 `js/config.js` 의 `APPS_SCRIPT_URL` 값을 위 URL로, `INGEST_TOKEN` 값을 4번에서 설정한 것과 동일한 문자열로 교체한다.
+8. 동작 확인:
 
    ```bash
    curl -X POST "<웹앱 URL>" -H "Content-Type: text/plain" \
-     -d '{"timestamp":"2026-07-07T10:00:00.000Z","sessionId":"test","page":"home","referrer":"direct","userAgent":"curl","deviceType":"desktop","browser":"Other","screenResolution":"1920x1080","viewportSize":"1280x720","language":"ko-KR","timezone":"Asia/Seoul","galleryFilterClicks":"[]","projectClickSequence":"[]","sectionDwellMs":"{}","mouseHeatmapGrid":"{}","pageDurationMs":1000,"formStepStatus":"{}","formCompleted":false,"consentGiven":false,"leadName":"","leadEmail":"","leadProjectType":"","leadDescription":""}'
+     -d '{"token":"<INGEST_TOKEN 값>","timestamp":"2026-07-07T10:00:00.000Z","sessionId":"test","page":"home","referrer":"direct","userAgent":"curl","deviceType":"desktop","browser":"Other","screenResolution":"1920x1080","viewportSize":"1280x720","language":"ko-KR","timezone":"Asia/Seoul","galleryFilterClicks":"[]","projectClickSequence":"[]","sectionDwellMs":"{}","mouseHeatmapGrid":"{}","pageDurationMs":1000,"formStepStatus":"{}","formCompleted":false,"consentGiven":false,"leadName":"","leadEmail":"","leadProjectType":"","leadDescription":""}'
    ```
 
-   실행 후 스프레드시트의 `Visitors` 시트에 한 행이 추가되면 정상 동작하는 것이다.
+   실행 후 스프레드시트의 `Visitors` 시트에 한 행이 추가되면 정상 동작하는 것이다. `token`이 틀리거나 없으면 `{"error":"unauthorized"}` 가 반환되고 시트에는 아무 것도 추가되지 않는다.
+
+   (curl로 이 URL을 직접 테스트하면 POST가 302 리다이렉트를 거치면서 `HTTP 405`로 실패하는 경우가 있었다 — GET은 정상 도달했으므로 배포/권한 자체는 문제가 아니었고, curl과 Google의 POST 리다이렉트 처리 방식 차이로 추정된다. 다만 실제 브라우저의 `fetch`/`sendBeacon`으로도 정상 동작하는지는 아직 확인되지 않았으므로, 확실한 검증은 실제 사이트에서 조작해보고 시트에 행이 쌓이는지 직접 확인하는 것이다.)
 
 ## 시트 컬럼 (순서대로)
 
@@ -56,4 +59,4 @@
 
 ## 보안 참고
 
-이 웹앱 URL을 아는 사람은 누구나 `Visitors` 시트에 행을 추가할 수 있다. URL을 공개 저장소에 커밋하지 말고, 실제 배포 시 별도 비공개 설정 파일로 관리하는 것을 권장한다.
+정적 사이트 특성상 브라우저 JS가 이 URL을 직접 호출해야 하므로, 배포된 사이트의 페이지 소스나 개발자도구 Network 탭을 보면 URL과 `INGEST_TOKEN` 값 모두 노출된다 — git에 커밋하는지 여부와 무관하게 배포 즉시 공개되는 정보다. `doPost`의 토큰 검증은 이 URL을 우연히 발견한 봇/무작위 요청이 시트에 쓰레기 데이터를 넣는 것을 막아주는 최소한의 장치일 뿐, 사이트 소스를 직접 들여다보는 사람을 막지는 못한다. 더 강한 보호가 필요하면 서버(예: Vercel Serverless Function 등)를 하나 두고 그 서버만 Apps Script 토큰을 알게 하는 구조로 바꿔야 한다.
